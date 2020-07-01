@@ -46,10 +46,13 @@ Now, we will calculate D_min for the trees in each dataset, as well as other met
 1. Enter the directory generation_of_datasets and run `make` to compile the C++ files.
 2. For each non-parallel treebank collection, run:
 ```analyze_treebanks individual_table <path-to-files-including-final-slash/> .headsu name-of-output-table.txt```
+
 Where path-to-files-including-final-slash is the path to the directory containing .headsu files (generated previously) that is being analyzed.
+
 3. For each parallel treebank collection, run:
 ```analyze_treebanks individual_table <path-to-files-including-final-slash/> .headsr name-of-output-table.txt```
-Note that the only different is that for parallel treebanks, we use .headsr files for our analysis, to guarantee that they are not skewed by different number of sentences of length <= 3 across treebanks.
+
+Note that the only difference is that for parallel treebanks, we use .headsr files for our analysis, to guarantee that they are not skewed by different number of sentences of length <= 3 across treebanks.
 
 The generated tables will be text files with a header that explains the columns:
 language n K2 D D_min 
