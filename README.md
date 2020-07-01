@@ -55,6 +55,6 @@ Where path-to-files-including-final-slash is the path to the directory containin
 Note that the only difference is that for parallel treebanks, we use .headsr files for our analysis, to guarantee that they are not skewed by different number of sentences of length <= 3 across treebanks.
 
 The generated tables will be text files with a header that explains the columns:
-language n K2 D D_min 
+```language n K2 D D_min```
 
 where language is an ISO 639-3 language code. The header is followed by one row per sentence, with the language and metrics associated with said sentence.
