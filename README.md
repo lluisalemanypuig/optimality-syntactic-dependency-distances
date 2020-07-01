@@ -38,3 +38,20 @@ The .conll(u) file is a merging of all corpora of the language present in the co
 The directories suffixed by "-shuffled" contain versions of the same where each tree has been randomly shuffled. These can be used as sanity check or to obtain metrics in case where the linear arrangements of trees are random.
 
 Of course, to process subsets of the collections (e.g. if one is interested in corpora from a single language, family, etc.), one can just create a folder with the relevant corpora (with the same subdirectory structure that comes in the UD and HamleDT downloads, i.e., for example, by just making a copy of the downloaded directory and deleting whatever languages/corpora are unneeded) and call java TreebankDataExtractor <UD/PUD/HamleDT> <relevant path>.
+
+## **Generation of datasets**
+
+Now, we will calculate D_min for the trees in each dataset, as well as other metrics (n, K2, D) useful for our analysis. To do so:
+
+1. Enter the directory generation_of_datasets and run `make` to compile the C++ files.
+2. For each non-parallel treebank collection, run:
+```analyze_treebanks individual_table <path-to-files-including-final-slash/> .headsu name-of-output-table.txt```
+Where path-to-files-including-final-slash is the path to the directory containing .headsu files (generated previously) that is being analyzed.
+3. For each parallel treebank collection, run:
+```analyze_treebanks individual_table <path-to-files-including-final-slash/> .headsr name-of-output-table.txt```
+Note that the only different is that for parallel treebanks, we use .headsr files for our analysis, to guarantee that they are not skewed by different number of sentences of length <= 3 across treebanks.
+
+The generated tables will be text files with a header that explains the columns:
+language n K2 D D_min 
+
+where language is an ISO 639-3 language code. The header is followed by one row per sentence, with the language and metrics associated with said sentence.
