@@ -10,7 +10,6 @@ Ensure that the directory with the UD, SUD and HamleDT downloads are in a drive 
 3. Change into the processing_of_treebanks_and_tests directory of this project, and run `make` to compile all classes (they work on Java 8 or greater).
 4. Still in said directory, run:
 ```
-java TreebankDataExtractor UD <path to UD>
 java TreebankDataExtractor UD <path to UD> 
 java TreebankDataExtractor UD <path to SUD> 
 java TreebankDataExtractor HamleDT <path to HamleDT>
