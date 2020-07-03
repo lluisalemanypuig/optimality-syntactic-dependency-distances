@@ -74,6 +74,7 @@ To generate the .omegas files:
 Where path-to-files-including-final-slash is the path to the directory containing .headsf files (generated previously) that is being analyzed. The .omegas files will be generated in the same directory.
 
 Now, we are ready to run the Monte Carlo tests. We will output the results into a single file for all collections and languages (columns will be used to identify collections, languages and sentence length for each test). To do so:
+
 3. Change to the processing_of_treebanks_and_tests directory. The Java classes there have been compiled in a previous step.
 4. To generate the header of the data file, run:
 ```
@@ -84,6 +85,16 @@ This will write a header line into the file with the information about the colum
 ```
 annotation language length sentences optimality optimality_random right_p_value left_p_value meanD meanD_random meanD_right_p_value meanD_left_p_value delta delta_random delta_right_p_value delta_left_p_value gamma gamma_random gamma_right_p_value gamma_left_p_value
 ``` 
+
+The meaning of the columns is:
+- Annotation: the treebank collection.
+- Language: ISO 639-3 code for the language.
+- Length: length of the sentences taken into consideration in this test. Rows with length=0 means that all lengths were included.
+- Optimality: value of Omega in the attested sentences.
+- Optimality_random: value of Omega in the randomized sentences.
+- Right_p_value: right p-value of the Monte Carlo test for significance of Omega.
+- Left_p_value: left p-value of the Monte Carlo test for significance of Omega.
+- Rest of the columns: same as the last four but using other metrics instead of Omega: D, <d>=D/(n-1), Delta and Gamma.
 
 5. For each of the collections, run:
 ```
