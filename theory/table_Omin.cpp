@@ -79,7 +79,7 @@ uint32_t n_calls_to_MiniZinc = 0;
 // ** output directory (where to place the compiled model file .fzn, data file .dzn, and output file .res)
 const string out_dir = "/tmp/";
 // ** path to MiniZinc executable
-const string exe_file = "/home/lluis/Documents/software/MiniZincIDE/bin/minizinc";
+const string exe_file = default_MZN_exe;
 /* -------- */
 
 // name of the .dzn file

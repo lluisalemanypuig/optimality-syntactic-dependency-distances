@@ -198,10 +198,10 @@ void calculate_mla(adjacency_matrix & g, int alpha, uint32_t root_or_anchor, uin
 		// T_1, T_3, ...
 		uint32_t start_aux=start;
 		for (uint32_t i=1;i<=2*p_alpha-anchored;i=i+2){
-			uint32_t c;
+			uint32_t c_aux;
 			uint32_t r=ord[i].second;
-			calculate_mla(g,RIGHT_ANCHOR,r,start_aux,mla_B,c);
-			cost_B+=c;
+			calculate_mla(g,RIGHT_ANCHOR,r,start_aux,mla_B,c_aux);
+			cost_B+=c_aux;
 			start_aux+=ord[i].first;	
 		}
 		
@@ -215,10 +215,10 @@ void calculate_mla(adjacency_matrix & g, int alpha, uint32_t root_or_anchor, uin
 		
 		// ..., T_4, T_2
 		for (uint32_t i=2*p_alpha-2*anchored;i>=2;i=i-2){
-			uint32_t c;
+			uint32_t c_aux;
 			uint32_t r=ord[i].second;
-			calculate_mla(g,LEFT_ANCHOR,r,start_aux,mla_B,c);
-			cost_B+=c;
+			calculate_mla(g,LEFT_ANCHOR,r,start_aux,mla_B,c_aux);
+			cost_B+=c_aux;
 			start_aux+=ord[i].first;
 		}
 		
