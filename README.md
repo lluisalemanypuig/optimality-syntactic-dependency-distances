@@ -58,3 +58,20 @@ The generated tables will be text files with a header that explains the columns:
 ```language n K2 D D_min```
 
 where language is an ISO 639-3 language code. The header is followed by one row per sentence, with the language and metrics associated with said sentence.
+
+## **Analysis**
+
+In this section, we will run the one-sided Monte Carlo tests for significance of each score, both globally and by sentence length groups.
+
+To do so, first we need to generate .omegas files for each of the .headsf files generated in the "Processing of treebanks" step. .omegas files contain one line per tree with relevant metrics (n, D, D_min, D_random and Omega) and will be used as input by the Java class that performs the Monte Carlo tests. Note that sentences of length smaller than 3 do not have an influence on the test's p-value, hence .headsf files are sufficient, and there is no need to use .headsu files.
+
+To generate the .omegas files:
+
+1. Enter the directory generation_of_datasets, containing C++ files that should already be compiled (see previous section).
+2. For each treebank collection, run:
+```analyze_treebanks omega_files <path-to-files-including-final-slash/> .headsf```
+
+Where path-to-files-including-final-slash is the path to the directory containing .headsf files (generated previously) that is being analyzed. The .omegas files will be generated in the same directory.
+
+Now, we are ready to run the Monte Carlo tests. To do so... (to be continued)
+
