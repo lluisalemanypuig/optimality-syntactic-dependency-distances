@@ -603,18 +603,57 @@ public class MonteCarloTestOmegaByLength
 				//"D:\\Treebanks\\ud-treebanks-v2.4\\merged-bylanguage";
 				//"D:\\Treebanks\\sud-treebanks-v2.5\\merged-bylanguage";
 		
-		//by length:
-		processDirectory(stanford,3,MAX_SENTENCE_LENGTH,10000,"Stanford ");
-		processDirectory(prague,3,MAX_SENTENCE_LENGTH,10000,"Prague ");
-		processDirectory(ud,3,MAX_SENTENCE_LENGTH,10000,"UD26 ");
-		processDirectory(sud,3,MAX_SENTENCE_LENGTH,10000,"SUD26 ");
-		//not by length:
-		processDirectory(stanford,0,0,10000,"Stanford ");
-		processDirectory(prague,0,0,10000,"Prague ");
-		processDirectory(ud,0,0,10000,"UD26 ");
-		processDirectory(sud,0,0,10000,"SUD26 ");
+		if ( args.length < 1 )
+		{
+			//default processing of hardwired folders.
 		
+			//by length:
+			processDirectory(stanford,3,MAX_SENTENCE_LENGTH,10000,"Stanford ");
+			processDirectory(prague,3,MAX_SENTENCE_LENGTH,10000,"Prague ");
+			processDirectory(ud,3,MAX_SENTENCE_LENGTH,10000,"UD26 ");
+			processDirectory(sud,3,MAX_SENTENCE_LENGTH,10000,"SUD26 ");
+			//not by length:
+			processDirectory(stanford,0,0,10000,"Stanford ");
+			processDirectory(prague,0,0,10000,"Prague ");
+			processDirectory(ud,0,0,10000,"UD26 ");
+			processDirectory(sud,0,0,10000,"SUD26 ");
+			
+		}
+		else if ( args.length == 1 )
+		{
+			if ( "header".equalsIgnoreCase(args[0]) ) 
+				System.out.println("annotation language length sentences optimality optimality_random right_p_value left_p_value meanD meanD_random meanD_right_p_value meanD_left_p_value delta delta_random delta_right_p_value delta_left_p_value gamma gamma_random gamma_right_p_value gamma_left_p_value");
+			else
+				printUsage();
+		}
+		else if (args.length >= 4)
+		{
+			int maxLength;
+			if ( "all".equalsIgnoreCase(args[0]) ) maxLength = -1; //"all" means do both test by length and not by length.
+			else maxLength = Integer.valueOf(args[0]).intValue();
+			int iters = Integer.valueOf(args[1]).intValue();
+			String name = args[2];
+			String directory = args[3];
+			if ( maxLength == -1 )
+			{
+				processDirectory(directory,3,MAX_SENTENCE_LENGTH,iters,name+" ");
+				processDirectory(directory,0,0,iters,name+" ");
+			}
+			else if ( maxLength > 0 )
+				processDirectory(directory,3,maxLength,iters,name+" ");
+			else
+				processDirectory(directory,0,0,iters,name+" ");
+		}
+		else
+		{
+			printUsage();
+		}
 		
+	}
+	
+	public static void printUsage()
+	{
+		System.err.println("Usage: java MonteCarloTestOmegaByLength header | java MonteCarloTestOmegaByLength <maxlength/\"all\"> <iters> <collection-name> <full-path-to-folder-with-omegas-files>");
 	}
 	
 	public static void processDirectory ( String directory , int minLength , int maxLength , int iters , String linePrefix ) throws Throwable
