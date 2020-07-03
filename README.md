@@ -73,5 +73,22 @@ To generate the .omegas files:
 
 Where path-to-files-including-final-slash is the path to the directory containing .headsf files (generated previously) that is being analyzed. The .omegas files will be generated in the same directory.
 
-Now, we are ready to run the Monte Carlo tests. To do so... (to be continued)
+Now, we are ready to run the Monte Carlo tests. We will output the results into a single file for all collections and languages (columns will be used to identify collections, languages and sentence length for each test). To do so:
+3. Change to the processing_of_treebanks_and_tests directory. The Java classes there have been compiled in a previous step.
+4. To generate the header of the data file, run:
+```
+java MonteCarloTestOmegaByLength header >> path/to/test-output-file.txt
+``` 
 
+This will write a header line into the file with the information about the columns that we are going to populate next:
+```
+annotation language length sentences optimality optimality_random right_p_value left_p_value meanD meanD_random meanD_right_p_value meanD_left_p_value delta delta_random delta_right_p_value delta_left_p_value gamma gamma_random gamma_right_p_value gamma_left_p_value
+``` 
+
+5. For each of the collections, run:
+```
+java MonteCarloTestOmegaByLength all <iters> <collection-name> <path-to-omegas-files> >> path/to/test-output-file.txt
+```
+Where <iters> is the number of iterations for the Monte Carlo tests (100000 in the article), <collection-name> is an alphanumeric name to identify the collection (we suggest Stanford, Prague, UD26 and SUD26 for the respective collections) and <path-to-omegas-files> is the full path to the directory containing the omegas files for that collection.
+ 
+This program (which may take a while, depending on number of iterations - starting with small numbers is recommended for testing - will perform Monte Carlo tests for each .omegas file in the given folder. Tests will be performed both for groups of sentences of a given length (rows where the length column has a value >= 3) and mixing sentences of all lengths (rows where the length column has the value 0).
