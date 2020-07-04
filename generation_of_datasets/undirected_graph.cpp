@@ -4,7 +4,7 @@
 #include <fstream>
 #include "undirected_graph.hpp"
 // #include "shiloach.hh"
-#include "common.hh"
+#include "common.hpp"
 
 void connected_components(const undirected_graph &g, int c, int start, int &vertices, vector<int> &color, vector<int> &new_vertex);
 undirected_graph read_edges_from_ifstream(int vertices, int edges, ifstream &in);
@@ -269,14 +269,14 @@ int undirected_graph::edge_length_sum() const {
 
 int undirected_graph::minimum_edge_length_sum_of_a_tree() const {
    assert(tree());
-   list<pair<int, int> > l;
+   list<pair<uint32_t, uint32_t> > l;
    for (int i = 0; i<int(adjacent.size()); ++i) {
       for (set<int>::const_iterator j = adjacent[i].begin(); j != adjacent[i].end() and *j < i; ++j) {
-          l.push_back(pair<int, int>(i+1, *j+1));
+          l.push_back(pair<uint32_t, uint32_t>(i+1, *j+1));
       }
    } 
    assert(l.size() == vertices() - 1);
-   return calculate_D_min_Shiloach_aux(vertices(), l);
+   return calculate_D_min_Shiloach(vertices(), l);
 //   return calculate_D_min_chung_aux(vertices(), l);
 }
 
