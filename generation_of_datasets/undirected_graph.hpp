@@ -2,7 +2,7 @@
  *
  * Optimality Syntactic Dependency Distances
  * 
- * Copyright (C) 2020 Juan Luis Esteban
+ * Copyright (C) 2020
  *
  * This file is part of Optimality Syntactic Dependency Distances.
  *
@@ -21,9 +21,11 @@
  *
  * Contact:
  * 
- *     Juan Luis Esteban (esteban@cs.upc.edu)
- *         Office 110, Omega building     Jordi Girona St 1-3, Campus Nord UPC, 08034 Barcelona.    CATALONIA, SPAIN
- *         Webpage: https://www.cs.upc.edu/~esteban/
+ *     Ramon Ferrer i Cancho (rferrericancho@cs.upc.edu)
+ *         LARCA (Laboratory for Relational Algorithmics, Complexity and Learning)
+ *         CQL (Complexity and Quantitative Linguistics Lab)
+ *         Office S124, Omega building     Jordi Girona St 1-3, Campus Nord UPC, 08034 Barcelona.    CATALONIA, SPAIN
+ *         Webpage: https://cqllab.upc.edu/people/rferrericancho/
  *
  ********************************************************************/
 
