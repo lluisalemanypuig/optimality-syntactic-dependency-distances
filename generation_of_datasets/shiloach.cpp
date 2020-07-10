@@ -240,18 +240,10 @@ void calculate_mla(adjacency_matrix & g, int alpha, uint32_t root_or_anchor, uin
 			cost=cost_B;
 		}
 	}
-	
-	// from this on is only needed to make the arrangement
-	// flip arrangement if the anchor is far from the root
-	// node vector contains reachable nodes
-	// it is done only here after the arrangement is choosed
-	uint32_t anchor=v_star;
+	// flipping arrangement if needed
 	if (alpha==RIGHT_ANCHOR) {
-		// To flip the arrangement it must hold 
-		// start + mla[anchor] < start + size_tree- mla[anchor] + 1
-		// simplified and avoiding negative values
-		// 2*mla[anchor] < size_tree+1
-		if (2*mla[anchor-1] < size_tree+1) {
+		// the tree is right-anchored and the root is too much to the left
+		if (2*(mla[v_star-1]-start+1)<=size_tree){
 			for(uint32_t i=0;i<size_tree;++i){ 
 				uint32_t aux = start+size_tree-1-mla[node_vector[i]-1]+start;
 				mla[node_vector[i]-1]=aux;
@@ -259,11 +251,8 @@ void calculate_mla(adjacency_matrix & g, int alpha, uint32_t root_or_anchor, uin
 		}	
 	}
 	else if (alpha==LEFT_ANCHOR){
-		// To flip the arrangement it must hold 
-		// start + mla[anchor] > start + size_tree- mla[anchor] + 1
-		// simplified and avoiding negative values
-		// 2*mla[anchor] > size_tree+1
-		if (2*mla[anchor-1] > size_tree+1) {
+		// the tree is left-anchored and the root is too much to the right
+		if(2*(start+size_tree-1-mla[v_star-1]+1)<=size_tree){
 			for(uint32_t i=0;i<size_tree;++i){
 				uint32_t aux = start+size_tree-1-mla[node_vector[i]-1]+start;
 				mla[node_vector[i]-1]=aux;
@@ -280,8 +269,8 @@ uint32_t calculate_D_min_Shiloach(uint32_t n, list<pair<uint32_t,uint32_t> >&tre
 
    uint32_t c;
    uint32_t alpha=0;
-   calculate_mla(g,alpha,1,1,arrangement,c);
-
+   //calculate_mla(g,alpha,1,1,arrangement,c);
+   calculate_mla(g,alpha,1,0,arrangement,c);
    return c;
 }
 
