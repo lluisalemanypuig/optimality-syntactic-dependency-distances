@@ -227,7 +227,7 @@ public class TreebankDataExtractor
 		ConvertToHeadSequences.main(new String[0]);
 		System.out.println("Done. Written to " + shuffledPath.getAbsolutePath());
 		ConvertToHeadSequences.OMEGA_FILTER=false;
-		ConvertToHeadSequences.replaceInvalidWithPlaceholders = removeFunctionWords; //in the unfiltered files for reparallelization, we replace invalid trees with placeholders.
+		ConvertToHeadSequences.replaceInvalidWithPlaceholders = removeFunctionWords && parallel; //in the unfiltered files for reparallelization, we replace invalid trees with placeholders.
 		ConvertToHeadSequences.directory=UniversalDependenciesJoinerByLanguage.outputPath;
 		System.out.println("Generating " + ConvertToHeadSequences.UNFILTERED_EXTENSION + " files for regular files...");
 		ConvertToHeadSequences.main(new String[0]);
