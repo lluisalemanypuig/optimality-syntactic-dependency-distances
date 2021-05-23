@@ -13,27 +13,53 @@ Ensure that the directory with the UD, SUD and HamleDT downloads are in a drive 
 java TreebankDataExtractor UD <path to UD> 
 java TreebankDataExtractor UD <path to SUD> 
 java TreebankDataExtractor HamleDT <path to HamleDT>
+```
+If you wish to perform separate analysis on the parallel UD and SUD treebanks, also run:
+```
 java TreebankDataExtractor PUD <path to PUD> 
 java TreebankDataExtractor PUD <path to PSUD> 
 ```
-The following directories will be created:
+Finally, if you wish to perform analysis on UD and SUD (and their parallel versions) with function words removed, then you also need to run:
+```
+java TreebankDataExtractor UDcontent <path to UD> 
+java TreebankDataExtractor UDcontent <path to SUD> 
+java TreebankDataExtractor PUDcontent <path to PUD> 
+java TreebankDataExtractor PUDcontent <path to PSUD> 
+```
+Depending on which of the above you run, the following directories will be created: for the first mentioned runs,
 ```
 <path to UD>-merged-bylanguage
 <path to UD>-merged-bylanguage-shuffled
 <path to SUD>-merged-bylanguage
 <path to SUD>-merged-bylanguage-shuffled
-<path to PUD>-merged-bylanguage
-<path to PUD>-merged-bylanguage-shuffled
-<path to PSUD>-merged-bylanguage
-<path to PSUD>-merged-bylanguage-shuffled
 <path to HamleDT>-stanford-merged-bylanguage
 <path to HamleDT>-stanford-merged-bylanguage-shuffled
 <path to HamleDT>-prague-merged-bylanguage
 <path to HamleDT>-prague-merged-bylanguage-shuffled
 ```
+For the parallel treebanks,
+```
+<path to PUD>-merged-bylanguage
+<path to PUD>-merged-bylanguage-shuffled
+<path to PSUD>-merged-bylanguage
+<path to PSUD>-merged-bylanguage-shuffled
+```
+And for the analysis without function words,
+```
+<path to UD>-content-merged-bylanguage
+<path to UD>-content-merged-bylanguage-shuffled
+<path to SUD>-content-merged-bylanguage
+<path to SUD>-content-merged-bylanguage-shuffled
+<path to PUD>-content-merged-bylanguage
+<path to PUD>-content-merged-bylanguage-shuffled
+<path to PSUD>-content-merged-bylanguage
+<path to PSUD>-content-merged-bylanguage-shuffled
+```
 Each generated directory contains one .conll or .conllu file, one .headsf and one .headsu file per language. The folders for the parallel treebanks (PUD and PSUD) will also contain .headsr files. 
 
 The .conll(u) file is a merging of all corpora of the language present in the collection and with a given annotation style, in the original format. The .headsu files contain compact representations of trees (after removing punctuation and null elements). The .headsf files are filtered versions of .headsu files that exclude trees with less than 3 nodes (useful, e.g. to feed to the program that calculates D_min). The .headsr files for parallel collections of treebanks are filtered versions that exclude sentences that have less than 3 words in *any* of the languages in the parallel treebanks - this ensures that the treebanks stay parallel after the filtering.
+
+The directories containing the string "-content-" contain versions where UD function words have been removed, thus leaving only content words.
 
 The directories suffixed by "-shuffled" contain versions of the same where each tree has been randomly shuffled. These can be used as sanity check or to obtain metrics in case where the linear arrangements of trees are random.
 
