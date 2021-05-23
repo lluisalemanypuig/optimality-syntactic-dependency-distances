@@ -36,10 +36,13 @@ import java.util.StringTokenizer;
  * This class calls several other classes to perform treebank merging, data extraction, shuffling and conversion to head sequences (.heads2 files),
  * making the process easier to use.
  * 
- * Usage: java TreebankDataExtractor <UD/HamleDT> <path/to/corpora>
+ * Usage: java TreebankDataExtractor <UD/PUD/UDcontent/PUDcontent/HamleDT> <path/to/corpora>
  * 
  * Will create folders with same name as the path to the corpora, but with
  * the suffixes "-merged", "-merged-bylanguage" and "-merged-bylanguage-shuffled".
+ * 
+ * With the UDcontent/PUDcontent options (remove UD function words), folders will
+ * be named "-content-merged", "-content-merged-bylanguage" and "-content-merged-bylanguage-shuffled".
  * 
  * @author carlos
  * @date 2020-06-26
@@ -49,7 +52,7 @@ public class TreebankDataExtractor
 	
 	private static void printUsage()
 	{
-		System.err.println("Usage: java TreebankDataExtractor <UD/HamleDT> <path/to/corpora>");
+		System.err.println("Usage: java TreebankDataExtractor <UD/UDcontent/PUD/PUDcontent/HamleDT> <path/to/corpora>");
 	}
 	
 	private static String separator = "-";
@@ -176,15 +179,15 @@ public class TreebankDataExtractor
 		
 	}
 	
-	public static void processUD ( String folderName , boolean parallel ) throws Throwable
+	public static void processUD ( String folderName , boolean parallel , boolean removeFunctionWords ) throws Throwable
 	{
 		UniversalDependenciesTreebankJoiner.pathToUD = folderName;
-		UniversalDependenciesTreebankJoiner.pathToOutput = folderName + separator + "merged";
+		UniversalDependenciesTreebankJoiner.pathToOutput = folderName + separator + (removeFunctionWords?"content-":"") + "merged";
 		System.out.println("Merging UD CoNLLU files to one per treebank...");
 		UniversalDependenciesTreebankJoiner.main(new String[0]);
 		System.out.println("Done. Written to " + UniversalDependenciesTreebankJoiner.pathToOutput);
 		UniversalDependenciesJoinerByLanguage.inputPath = UniversalDependenciesTreebankJoiner.pathToOutput;
-		UniversalDependenciesJoinerByLanguage.outputPath = folderName + separator + "merged-bylanguage";
+		UniversalDependenciesJoinerByLanguage.outputPath = folderName + separator + (removeFunctionWords?"content-":"") + "merged-bylanguage";
 		System.out.println("Merging UD CoNLLU files to one per language...");
 		UniversalDependenciesJoinerByLanguage.main(new String[0]);
 		System.out.println("Done. Written to " + UniversalDependenciesJoinerByLanguage.outputPath);
@@ -194,7 +197,7 @@ public class TreebankDataExtractor
 		Conll2006TreebankShuffler.main(new String[0]);
 		System.out.println("Done. Written to " + Conll2006TreebankShuffler.directory);
 		System.out.println("Moving shuffled files to their own directory...");
-		File shuffledPath = new File(folderName + separator + "merged-bylanguage-shuffled");
+		File shuffledPath = new File(folderName + separator + (removeFunctionWords?"content-":"") + "merged-bylanguage-shuffled");
 		shuffledPath.mkdirs();
 		File[] myFiles = new File(Conll2006TreebankShuffler.directory).listFiles();
 		for ( int i = 0 ; i < myFiles.length ; i++ )
@@ -209,6 +212,9 @@ public class TreebankDataExtractor
 		ConvertToHeadSequences.E2_FILTER = false;
 		ConvertToHeadSequences.OMEGA_FILTER = true;
 		ConvertToHeadSequences.punctuationCriterion = LabelledDependencyStructure.UNIVERSAL_DEPENDENCIES_PUNCTUATION_CRITERION;
+		ConvertToHeadSequences.removeFunctionWords = removeFunctionWords;
+		if ( removeFunctionWords )
+			ConvertToHeadSequences.functionWordCriterion = LabelledDependencyStructure.UNIVERSAL_DEPENDENCIES_FUNCTION_WORD_CRITERION;
 		ConvertToHeadSequences.directory=UniversalDependenciesJoinerByLanguage.outputPath;
 		System.out.println("Generating " + ConvertToHeadSequences.OMEGA_FILTER_EXTENSION + " files for regular files...");
 		ConvertToHeadSequences.main(new String[0]);
@@ -253,11 +259,19 @@ public class TreebankDataExtractor
 		}
 		if ( "UD".equalsIgnoreCase(args[0]) )
 		{
-			processUD ( args[1] , false );
+			processUD ( args[1] , false , false );
 		}
 		else if ( "PUD".equalsIgnoreCase(args[0]) )
 		{
-			processUD ( args[1] , true );
+			processUD ( args[1] , true , false  );
+		}
+		else if ( "UDcontent".equalsIgnoreCase(args[0]) )
+		{
+			processUD ( args[1] , false , true  );
+		}
+		else if ( "PUDcontent".equalsIgnoreCase(args[0]) )
+		{
+			processUD ( args[1] , true , true  );
 		}
 		else if ( "HamleDT".equalsIgnoreCase(args[0]) )
 		{

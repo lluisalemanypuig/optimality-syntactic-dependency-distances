@@ -88,9 +88,10 @@ public class ConvertToHeadSequences
 	 * Also, stats are updated.
 	 * @param lds
 	 */
-	public static LabelledDependencyStructure preprocess ( LabelledDependencyStructure lds )
+	public static LabelledDependencyStructure preprocess ( LabelledDependencyStructure lds , boolean removeFunctionWords )
 	{
 		lds = lds.removePunctuation();
+		if ( removeFunctionWords ) lds = lds.removeFunctionWords();
 		
 		sumMiddleLengths += lds.getNumberOfNodes();
 		sumMiddleC += lds.getNumberOfCrossings(false);
@@ -129,7 +130,7 @@ public class ConvertToHeadSequences
 	 * @param outputFile
 	 * @return Array of doubles to make exporting stats to Excel easier.
 	 */
-	public static double[] processFiles ( File inputFile , File outputFile ) throws Throwable
+	public static double[] processFiles ( File inputFile , File outputFile , boolean removeFunctionWords ) throws Throwable
 	{
 		Conll2006LabelledDependencyTreebankReader myReader = 
 				new Conll2006LabelledDependencyTreebankReader(
@@ -172,7 +173,7 @@ public class ConvertToHeadSequences
 			sumInitialLengths += lds.getNumberOfNodes();
 			sumInitialC += lds.getNumberOfCrossings(false);
 			
-			lds = preprocess(lds);
+			lds = preprocess(lds,removeFunctionWords);
 			
 			if ( lds != null && lds.contents.length > 0 ) //we don't output sentences that end up being length 0 after removing punctuation and such.
 			{
@@ -258,6 +259,12 @@ public class ConvertToHeadSequences
 	//for HamleDT we use this one:
 	//static int punctuationCriterion = LabelledDependencyStructure.HAMLEDT_PUNCTUATION_CRITERION_PLUS_NULL_ELEMENTS;
 	
+	//for UD we use this criterion:
+	static int functionWordCriterion = LabelledDependencyStructure.UNIVERSAL_DEPENDENCIES_FUNCTION_WORD_CRITERION;
+	
+	//set to true to remove function words
+	static boolean removeFunctionWords = false;
+	
 	public static void main ( String[] args ) throws Throwable
 	{
 		
@@ -300,7 +307,7 @@ public class ConvertToHeadSequences
 				System.out.println("=====================");
 				System.out.println("Processing input file: " + currentInputFile);
 				System.out.println("Output file: " + outputFile);
-				double[] csvStats = processFiles(currentInputFile,outputFile);
+				double[] csvStats = processFiles(currentInputFile,outputFile,removeFunctionWords);
 				statsToPrintOut.add(csvStats);
 			}
 		}

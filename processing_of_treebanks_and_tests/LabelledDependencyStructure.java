@@ -28,6 +28,7 @@
  *          Webpage: http://www.grupolys.org/~cgomezr/
  *          
  *******************************************************************************/
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -84,7 +85,15 @@ public class LabelledDependencyStructure extends DependencyStructure implements 
 	 */
 	private static int punctuationCriterion = UNICODE_PUNCTUATION_CRITERION;
 	
+	/**
+	 * Criterion used for function words in UD.
+	 */
+	public static int UNIVERSAL_DEPENDENCIES_FUNCTION_WORD_CRITERION = 0;
 
+	/**
+	 * Criterion used to determine whether a node is a function word.
+	 */
+	private static int functionWordCriterion = UNIVERSAL_DEPENDENCIES_FUNCTION_WORD_CRITERION;
 	
 	/**
 	 * Obtains the criterion used for distinguishing punctuation nodes.
@@ -280,6 +289,18 @@ public class LabelledDependencyStructure extends DependencyStructure implements 
 			return false;
 	}
 	
+	public boolean isFunctionWord ( int i )
+	{
+		if ( functionWordCriterion == UNIVERSAL_DEPENDENCIES_FUNCTION_WORD_CRITERION )
+		{
+			String uPosTag = getCPosTag(i);
+			String[] functionWordTags = new String[] {"ADP","AUX","CCONJ","DET","NUM","PART","PRON","SCONJ"}; 
+			if ( Arrays.asList(functionWordTags).contains(uPosTag) )
+				return true;
+		}
+		return false;
+	}
+	
 	public String getSentence()
 	{
 		StringBuffer sb = new StringBuffer("");
@@ -338,6 +359,32 @@ public class LabelledDependencyStructure extends DependencyStructure implements 
 			for ( int i = 1 ; i <= result.getNumberOfNodes() ; i++ )
 			{
 				if ( result.isPunctuation(i) )
+				{
+					int head = result.getParentForNode(i);
+					//System.out.println("Contract " + head + "," + i);
+					result = result.contract(head,i);
+					done = false;
+					break;
+				}
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * Returns the result of removing all function words from the tree. If a function word node has children, then the children are attached to the function word node's parent.
+	 */
+	public LabelledDependencyStructure removeFunctionWords()
+	{
+		if ( getNumberOfNodes() == 0 ) return this; //empty sentence, nothing to remove
+		LabelledDependencyStructure result = (LabelledDependencyStructure) this.clone();
+		boolean done = false;
+		while ( !done )
+		{
+			done = true;
+			for ( int i = 1 ; i <= result.getNumberOfNodes() ; i++ )
+			{
+				if ( result.isFunctionWord(i) )
 				{
 					int head = result.getParentForNode(i);
 					//System.out.println("Contract " + head + "," + i);
