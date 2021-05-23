@@ -546,4 +546,17 @@ public class LabelledDependencyStructure extends DependencyStructure implements 
 		}
 	}
 	
+	//a placeholder to avoid empty structures
+	public static LabelledDependencyStructure getSize1Placeholder()
+	{
+		LabelledDependencyStructure result = new LabelledDependencyStructure();
+		result.contents = new int[] {0};
+		result.setCPosTag(1, "PLACEHOLDER");
+		result.setForm(1,"PLACEHOLDER");
+		result.setLemma(1,"PLACEHOLDER");
+		result.setPosTag(1,"PLACEHOLDER");
+		result.setLinkLabel(1,"PLACEHOLDER");
+		return result;
+	}
+	
 }

@@ -130,7 +130,7 @@ public class ConvertToHeadSequences
 	 * @param outputFile
 	 * @return Array of doubles to make exporting stats to Excel easier.
 	 */
-	public static double[] processFiles ( File inputFile , File outputFile , boolean removeFunctionWords ) throws Throwable
+	public static double[] processFiles ( File inputFile , File outputFile , boolean removeFunctionWords , boolean replaceInvalidWithPlaceholders ) throws Throwable
 	{
 		Conll2006LabelledDependencyTreebankReader myReader = 
 				new Conll2006LabelledDependencyTreebankReader(
@@ -174,6 +174,12 @@ public class ConvertToHeadSequences
 			sumInitialC += lds.getNumberOfCrossings(false);
 			
 			lds = preprocess(lds,removeFunctionWords);
+			
+			if ( replaceInvalidWithPlaceholders )
+			{
+				if ( lds == null || lds.contents.length == 0 )
+					lds = LabelledDependencyStructure.getSize1Placeholder();
+			}
 			
 			if ( lds != null && lds.contents.length > 0 ) //we don't output sentences that end up being length 0 after removing punctuation and such.
 			{
@@ -265,6 +271,9 @@ public class ConvertToHeadSequences
 	//set to true to remove function words
 	static boolean removeFunctionWords = false;
 	
+	//set to true to generate a size-1 sentence if sentence is invalid (is not a tree, becomes empty after removing punctuation and/or function words, etc.)
+	static boolean replaceInvalidWithPlaceholders = false;
+	
 	public static void main ( String[] args ) throws Throwable
 	{
 		
@@ -307,7 +316,7 @@ public class ConvertToHeadSequences
 				System.out.println("=====================");
 				System.out.println("Processing input file: " + currentInputFile);
 				System.out.println("Output file: " + outputFile);
-				double[] csvStats = processFiles(currentInputFile,outputFile,removeFunctionWords);
+				double[] csvStats = processFiles(currentInputFile,outputFile,removeFunctionWords,replaceInvalidWithPlaceholders);
 				statsToPrintOut.add(csvStats);
 			}
 		}

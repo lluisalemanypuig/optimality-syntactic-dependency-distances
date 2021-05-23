@@ -117,6 +117,8 @@ public class TreebankDataExtractor
 		ConvertToHeadSequences.E2_FILTER = false;
 		ConvertToHeadSequences.OMEGA_FILTER = true;
 		ConvertToHeadSequences.punctuationCriterion = LabelledDependencyStructure.HAMLEDT_PUNCTUATION_CRITERION_PLUS_NULL_ELEMENTS;
+		ConvertToHeadSequences.replaceInvalidWithPlaceholders = false;
+		ConvertToHeadSequences.removeFunctionWords = false;
 		ConvertToHeadSequences.directory=HamleDTTreebankJoiner.pathToOutput;
 		System.out.println("Generating " + ConvertToHeadSequences.OMEGA_FILTER_EXTENSION + " files for regular files...");
 		ConvertToHeadSequences.main(new String[0]);
@@ -213,6 +215,7 @@ public class TreebankDataExtractor
 		ConvertToHeadSequences.OMEGA_FILTER = true;
 		ConvertToHeadSequences.punctuationCriterion = LabelledDependencyStructure.UNIVERSAL_DEPENDENCIES_PUNCTUATION_CRITERION;
 		ConvertToHeadSequences.removeFunctionWords = removeFunctionWords;
+		ConvertToHeadSequences.replaceInvalidWithPlaceholders = false;
 		if ( removeFunctionWords )
 			ConvertToHeadSequences.functionWordCriterion = LabelledDependencyStructure.UNIVERSAL_DEPENDENCIES_FUNCTION_WORD_CRITERION;
 		ConvertToHeadSequences.directory=UniversalDependenciesJoinerByLanguage.outputPath;
@@ -224,6 +227,7 @@ public class TreebankDataExtractor
 		ConvertToHeadSequences.main(new String[0]);
 		System.out.println("Done. Written to " + shuffledPath.getAbsolutePath());
 		ConvertToHeadSequences.OMEGA_FILTER=false;
+		ConvertToHeadSequences.replaceInvalidWithPlaceholders = removeFunctionWords; //in the unfiltered files for reparallelization, we replace invalid trees with placeholders.
 		ConvertToHeadSequences.directory=UniversalDependenciesJoinerByLanguage.outputPath;
 		System.out.println("Generating " + ConvertToHeadSequences.UNFILTERED_EXTENSION + " files for regular files...");
 		ConvertToHeadSequences.main(new String[0]);
@@ -247,6 +251,8 @@ public class TreebankDataExtractor
 			System.out.println("Done.");
 		}
 		
+		ConvertToHeadSequences.replaceInvalidWithPlaceholders = false;
+		ConvertToHeadSequences.removeFunctionWords = false;
 		
 	}
 	
