@@ -1,6 +1,16 @@
-# optimality-syntactic-dependency-distances
+# Preprocessed data and code for the article ["The optimality of syntactic dependency distances"](https://arxiv.org/abs/2007.15342)
 
-## **Processing of treebanks**
+## **Preprocessed data**
+
+Data is available in two levels of preprocessing. The first level consist of the syntactic dependency structures of every sentence as in head vector 
+for each collection and treebank: [here](https://cqllab.upc.edu/lal/universal-dependencies/) for UD/SUD based collections and [here]() for the Prague and Stanford collections. 
+
+The second level of preprocessing consists of just the essential information of every sentence, for each treebank and collection:
+language (the iso code of the language), n (the number of vertices), K2 (the sum of squared degrees), D (the sum of dependency distances), D_min (the minimum sum of dependency distances). The information is available from [here](https://mydisk.cs.upc.edu/s/ByX3w4KFqFNjE7w) (one file for each combination of collection and annotation style).
+
+## **Code**
+
+### **Processing of treebanks**
 
 The first step of the analysis involves downloading collections of syntactic corpora and processing them into a compact, uniform format that facilitates analysis.
 
@@ -65,7 +75,7 @@ The directories suffixed by "-shuffled" contain versions of the same where each 
 
 Of course, to process subsets of the collections (e.g. if one is interested in corpora from a single language, family, etc.), one can just create a folder with the relevant corpora (with the same subdirectory structure that comes in the UD and HamleDT downloads, i.e., for example, by just making a copy of the downloaded directory and deleting whatever languages/corpora are unneeded) and call java TreebankDataExtractor <UD/PUD/HamleDT> <relevant path>.
 
-## **Generation of datasets**
+### **Generation of datasets**
 
 Now, we will calculate D_min for the trees in each dataset, as well as other metrics (n, K2, D) useful for our analysis. To do so:
 
@@ -85,7 +95,7 @@ The generated tables will be text files with a header that explains the columns:
 
 where language is an ISO 639-3 language code. The header is followed by one row per sentence, with the language and metrics associated with said sentence.
 
-## **Analysis**
+### **Analysis**
 
 In this section, we will run the one-sided Monte Carlo tests for significance of each score, both globally and by sentence length groups.
 
