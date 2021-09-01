@@ -2,11 +2,15 @@
 
 ## **Preprocessed data**
 
-Data is available in two levels of preprocessing. The first level consist of the syntactic dependency structures of every sentence as in head vector 
-for each collection and treebank: [here](https://cqllab.upc.edu/lal/universal-dependencies/) for UD/SUD based collections and [here]() for the Prague and Stanford collections. 
+Data is available in two levels of preprocessing. The first level consist of the syntactic dependency structures of every sentence in head vector format 
+for each collection and treebank: [UD-based collections](https://cqllab.upc.edu/lal/universal-dependencies/) and [Prague and Stanford collections](https://cqllab.upc.edu/lal/others/). 
 
-The second level of preprocessing consists of just the essential information of every sentence, for each treebank and collection:
-language (the iso code of the language), n (the number of vertices), K2 (the sum of squared degrees), D (the sum of dependency distances), D_min (the minimum sum of dependency distances). The information is available from [here](https://mydisk.cs.upc.edu/s/ByX3w4KFqFNjE7w) (one file for each combination of collection and annotation style).
+The second level of preprocessing consists of just the essential information of every sentence, for each collection and treebank:
+language (the iso code of the language), n (the number of vertices), K2 (the sum of squared degrees), D (the sum of dependency distances), D_min (the minimum sum of dependency distances). The information is available as [one file for each combination of collection and annotation style](https://mydisk.cs.upc.edu/s/ByX3w4KFqFNjE7w).
+
+The data resulting from the experiments on function word removal is available for [level 1 and level 2 all together](https://mydisk.cs.upc.edu/s/9X9Akx3M8MkFQqy).
+
+The information about every language employed in our analyses (e.g. family, popular name) is available [here](https://mydisk.cs.upc.edu/s/odKZBqDeatoiNdt).
 
 ## **Code**
 
