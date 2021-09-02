@@ -99,10 +99,10 @@ constraint alldifferent(arrangement);
 
 var int: D;
 constraint
-  D = sum(m in EDGES) (
+  D = sum(e in EDGES) (
 	let {
-		int: u = tree[m,1];
-		int: v = tree[m,2]
+		int: u = tree[e,1];
+		int: v = tree[e,2]
 	}
 	in
     abs(arrangement[u] - arrangement[v])
