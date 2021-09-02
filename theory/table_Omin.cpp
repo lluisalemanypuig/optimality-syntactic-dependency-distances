@@ -83,32 +83,32 @@ const string exe_file = default_MZN_exe;
 /* -------- */
 
 // name of the .dzn file
-string tree_file;
+string MiniZinc_tree_file_dzn;
 // name of the .fzn file
-string max_fzn;
+string MiniZinc_max_fzn;
 // name of output file .res
-string max_res_file;
+string MiniZinc_result_file;
 // execution command
-string max_command;
+string MiniZinc_DMax_command;
 
 // initialise the appropriate variables with this process id
 // in order to make a correct execution command for MiniZinc
 void make_minizinc_command(uint32_t n) {
 	const string n_str = to_str2(n);
 
-	tree_file = out_dir + "__Omin__tree__" + n_str + ".dzn";
-	max_fzn = out_dir + "__Omin__model__" + n_str + ".fzn";
-	max_res_file = out_dir + "__Omin__result__" + n_str + ".res";
-	
-	max_command =
+	MiniZinc_tree_file_dzn = out_dir + "__Omin__tree__" + n_str + ".dzn";
+	MiniZinc_max_fzn = out_dir + "__Omin__model__" + n_str + ".fzn";
+	MiniZinc_result_file = out_dir + "__Omin__result__" + n_str + ".res";
+
+	MiniZinc_DMax_command =
 		exe_file + " " \
-			+ "--fzn " + max_fzn + " " \
+			+ "--fzn " + MiniZinc_max_fzn + " " \
 			+ "--solver Chuffed" + " " \
 			+ "-p 1" + " " \
 			+ "-O1" + " " \
 			+ "MiniZinc/max_D.mzn" + " " \
-			+ tree_file + " > " \
-			+ max_res_file;
+			+ MiniZinc_tree_file_dzn + " > " \
+			+ MiniZinc_result_file;
 }
 
 // Computes the sum of the length of the edges in a linear arrangement.
@@ -319,8 +319,8 @@ uint32_t compute_DMax(const ftree& t) {
 	++n_calls_to_MiniZinc;
 	
 	// make a file with MiniZinc's format
-	ofstream _ttf; // this_tree_file
-	_ttf.open(tree_file);
+	ofstream _ttf; // this_MiniZinc_tree_file_dzn
+	_ttf.open(MiniZinc_tree_file_dzn);
 	const linearrgmnt relab = output_tree(t, _ttf);	
 	_ttf.close();
 	
@@ -328,7 +328,7 @@ uint32_t compute_DMax(const ftree& t) {
 	table_log << "    launching MiniZinc to compute DMax" << endl;
 	const int child_DMax = fork();
 	if (child_DMax == 0) {
-		int r = system(max_command.c_str());
+		int r = system(MiniZinc_DMax_command.c_str());
 		if (r == -1) {
 			cerr << "Error:" << endl;
 			cerr << "    Neither child could not be created or status" << endl;
@@ -355,7 +355,7 @@ uint32_t compute_DMax(const ftree& t) {
 	// read the output files, compute D and so on....
 	table_log << "    processing result for DMax" << endl;
 	
-	return parse_minizinc_file(t, max_res_file, relab);
+	return parse_minizinc_file(t, MiniZinc_result_file, relab);
 }
 
 // compute the minimum Omega_min among all bistar trees of n vertices.
@@ -476,7 +476,7 @@ int main(int argc, char *argv[]) {
 
 	table_log.open("data/log-" + to_str2(n));
 	table_file.open("data/table_file.tsv", std::ios_base::app);
-	trees_file.open("data/tree_file.txt", std::ios_base::app);
+	trees_file.open("data/MiniZinc_tree_file_dzn.txt", std::ios_base::app);
 	
 	if (output_header) {
 		// if 'table_file' is empty then output the header
