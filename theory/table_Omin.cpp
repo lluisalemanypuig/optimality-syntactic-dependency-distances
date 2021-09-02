@@ -278,20 +278,6 @@ linearrgmnt output_tree(const ftree& t, ostream& os) {
 	return relab;
 }
 
-uint32_t compute_DMax_bruteforce(const ftree& t) {
-	linearrgmnt arr(t.n_nodes());
-	std::iota(arr.begin(), arr.end(), 0);
-	uint32_t DMax = 0;
-
-	do {
-		const uint32_t D = sum_length_edges(t, arr);
-		DMax = std::max(DMax, D);
-	}
-	while (std::next_permutation(arr.begin(), arr.end()));
-
-	return DMax;
-}
-
 uint32_t compute_DMax_k_quasistar(const ftree& t) {
 	const uint32_t n = t.n_nodes();
 
