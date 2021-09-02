@@ -1,6 +1,6 @@
 # Preprocessed data and code for the article ["The optimality of syntactic dependency distances"](https://arxiv.org/abs/2007.15342)
 
-## **Preprocessed data**
+## Preprocessed data
 
 Data is available in two levels of preprocessing. The first level consist of the syntactic dependency structures of every sentence in head vector format 
 for each collection and treebank: [UD-based collections](https://cqllab.upc.edu/lal/universal-dependencies/) and [Prague and Stanford collections](https://cqllab.upc.edu/lal/others/). 
@@ -12,9 +12,89 @@ The data resulting from the experiments on function word removal is available fo
 
 The information about every language employed in our analyses (e.g. family, popular name) is available [here](https://mydisk.cs.upc.edu/s/odKZBqDeatoiNdt).
 
-## **Code**
+## Code
 
-### **Processing of treebanks**
+### Theory
+
+We wanted to find empirically a lower bound of the value of Omega. Such a lower bound is obtained by calculating the value of modified Omega for every tree and keeping the minimum value among all _n_-vertex trees. The modified Omega is:
+
+             E[D] - D_max
+    Omega = --------------
+             E[D] - D_min
+             
+We denote said minimum value as `O_n`. However, the actual strategy used is that explained in the paper. This strategy prevents calculating the value of modified Omega for all trees, thus greatly reducing the number of times that maximum D has to be calculated. This is important since there are not, to the best of our knowledge, any polynomial time algorithms to calculate the maximum value of D of a given tree. In order to calculate it we use two methods:
+- the well-known technique of Constraint Programming; for this we use a [MiniZinc](https://www.minizinc.org/) model, and
+- a linear-time computable formula to calculate the maximum D of specific kinds of trees for which the model takes too much time to calculate their maximum D.
+
+The [theory](https://github.com/lluisalemanypuig/optimality-syntactic-dependency-distances/tree/master/theory) folder contains all code necessary to calculate the minimum values of Omega. The MiniZinc model can be found within the [theory/MiniZinc folder](https://github.com/lluisalemanypuig/optimality-syntactic-dependency-distances/tree/master/theory/MiniZinc). The startegy used to calculate `O_n` is  implemented in the [main `.cpp` file](https://github.com/lluisalemanypuig/optimality-syntactic-dependency-distances/blob/master/theory/table_Omin.cpp?ts=4). The code to calculate the minimum value of D can be found in the [theory/Dmin folder](https://github.com/lluisalemanypuig/optimality-syntactic-dependency-distances/tree/master/theory/Dmin); said code implements Shiloach's algorithm. The other folders contain code that implement the `tree` class, code to generate all trees of a given number of vertices, and a class that wraps the GMP `m̀pq_t` data structure into a C++ class that is useful to keep track of `O_n`.
+
+Compiling the code is as simple as issuing the command `make` on a command line terminal (assuming a Unix environment) at the root of the theory folder. Compilation was tested on `gcc` version 9.3.0. Upon execution without parameters, as in
+
+    ./table_Omin
+
+you will get the following error message:
+
+    Error:
+        You did not set the path to MiniZinc's executable file.
+        Change the value of the variable 'exe_file'.
+
+Open the source file and change the value of the variable `exe_file` at line `82` with the appropriate path to the MiniZinc executable within your system. One might also want to change the value of the `out_dir` variable at line `80` with a more suitable path to a temporary directory. Executing again (and without parameters) should output anoher error message:
+
+    Error: wrong number of parameters.
+        ./table_Omin n
+
+    Find the trees of 'n' vertices minimises Omega_min
+
+which means that we must indicate the number of vertices of the trees for which we want to find `O_n`. Therefore, one can execute it like this:
+
+    ./table_Omin 5
+
+The program will crash for any value of `n` less than or equal to 2.
+
+The results will be stored in a directory called `data/`. The most important results are in two files:
+- `data/table_file.tsv`: contains a list of tabulator-separated columns with the following data
+
+        n num_trees Omega_min trees_min D_min D_max
+   
+  where
+  - `n` is the number of vertices of the tree,
+  - `num_trees` is the number of trees of `n` vertices,
+  - `Omega_min` is the value `O_n`,
+  - `trees_min` is the amount of trees whose value of modified Omega is `O_n`, and
+  - `D_min`, `D_max` are the minimum and maximum values of D of the tree(s) that yield the value `O_n`.
+
+- `data/tree_file.txt`: this file contains all the trees that yield the value `O_n`. Each tree is described with the following format:
+    
+        0: 1 3
+        1: 0 2
+        2: 1
+        3: 0
+
+    which, as it is easy to see, each row indicates the set of neighbours of the vertex with index given before the colon `:`. Each set of _n_-vertex trees are separated by a row of asterisks `*`, and headed by the string `n= ` followed by the number of vertices of the trees. For example, by running the executable first with parameter `3` and then with parameter `4` the result is:
+    
+        ******************************************
+        n= 3
+        0: 1 2
+        1: 0
+        2: 0
+        ******************************************
+        ******************************************
+        n= 4
+        0: 1 3
+        1: 0 2
+        2: 1
+        3: 0
+        0: 1 2 3
+        1: 0
+        2: 0
+        3: 0
+        ******************************************
+
+In a given execution, a third file is also produced. Such file is a log file where one can see a more verbose progress of the program, which also displays on standard output the percentage of trees processed.
+
+### Preprocessing and Analysis
+
+#### Processing of treebanks
 
 The first step of the analysis involves downloading collections of syntactic corpora and processing them into a compact, uniform format that facilitates analysis.
 
@@ -79,7 +159,7 @@ The directories suffixed by "-shuffled" contain versions of the same where each 
 
 Of course, to process subsets of the collections (e.g. if one is interested in corpora from a single language, family, etc.), one can just create a folder with the relevant corpora (with the same subdirectory structure that comes in the UD and HamleDT downloads, i.e., for example, by just making a copy of the downloaded directory and deleting whatever languages/corpora are unneeded) and call java TreebankDataExtractor <UD/PUD/HamleDT> <relevant path>.
 
-### **Generation of datasets**
+#### Generation of datasets
 
 Now, we will calculate D_min for the trees in each dataset, as well as other metrics (n, K2, D) useful for our analysis. To do so:
 
@@ -99,7 +179,7 @@ The generated tables will be text files with a header that explains the columns:
 
 where language is an ISO 639-3 language code. The header is followed by one row per sentence, with the language and metrics associated with said sentence.
 
-### **Analysis**
+#### Analysis
 
 In this section, we will run the one-sided Monte Carlo tests for significance of each score, both globally and by sentence length groups.
 
