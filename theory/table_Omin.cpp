@@ -453,9 +453,16 @@ int main(int argc, char *argv[]) {
 	// number of vertices
 	const uint32_t n = atoi(argv[1]);
 
+	// make the command used to execute minizinc
 	make_minizinc_command(n);
 	
+	// create the output directory 'data/' if it does not exist already
+	if (not filesystem::exists("data/")) {
+		filesystem::create_directory("data/");
+	}
+	
 	// should we output the header for the table file?
+	// the header is written only if the file did not exist before running this
 	bool output_header;
 	{
 	const filesystem::path p = "data/table_file.tsv";
@@ -469,7 +476,7 @@ int main(int argc, char *argv[]) {
 
 	table_log.open("data/log-" + to_str2(n));
 	table_file.open("data/table_file.tsv", std::ios_base::app);
-	trees_file.open("data/tree_file.tsv", std::ios_base::app);
+	trees_file.open("data/tree_file.txt", std::ios_base::app);
 	
 	if (output_header) {
 		// if 'table_file' is empty then output the header
