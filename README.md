@@ -161,6 +161,8 @@ Of course, to process subsets of the collections (e.g. if one is interested in c
 
 #### Generation of datasets
 
+##### Procedure A
+
 Now, we will calculate D_min for the trees in each dataset, as well as other metrics (n, K2, D) useful for our analysis. To do so:
 
 1. Enter the directory generation_of_datasets and run `make` to compile the C++ files.
@@ -178,6 +180,10 @@ The generated tables will be text files with a header that explains the columns:
 ```language n K2 D D_min```
 
 where language is an ISO 639-3 language code. The header is followed by one row per sentence, with the language and metrics associated with said sentence.
+
+##### Procedure B
+
+The steps above can be reproduced with a single [script](https://github.com/lluisalemanypuig/optimality-syntactic-dependency-distances/blob/master/generation_of_datasets_with_LAL/generate_data.py).
 
 #### Analysis
 
