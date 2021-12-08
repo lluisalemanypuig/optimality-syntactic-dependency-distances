@@ -1,4 +1,4 @@
-# Preprocessed data and code for the article ["The optimality of syntactic dependency distances"](https://arxiv.org/abs/2007.15342)
+# Preprocessed data and code for the article ["Optimality of syntactic dependency distances"](https://arxiv.org/abs/2007.15342)
 
 ## Preprocessed data
 
@@ -6,7 +6,7 @@ Data is available in two levels of preprocessing. The first level consist of the
 for each collection and treebank: [UD-based collections](https://cqllab.upc.edu/lal/universal-dependencies/) and [Prague and Stanford collections](https://cqllab.upc.edu/lal/others/). 
 
 The second level of preprocessing consists of just the essential information of every sentence, for each collection and treebank:
-language (the iso code of the language), n (the number of vertices), K2 (the sum of squared degrees), D (the sum of dependency distances), D_min (the minimum sum of dependency distances). The information is available as [one file for each combination of collection and annotation style](https://mydisk.cs.upc.edu/s/ByX3w4KFqFNjE7w).
+language (the iso code of the language), `n` (the number of vertices), `K2` (the sum of squared degrees), `D` (the sum of dependency distances), `D_min` (the minimum sum of dependency distances). The information is available as [one file for each combination of collection and annotation style](https://mydisk.cs.upc.edu/s/ByX3w4KFqFNjE7w).
 
 The data resulting from the experiments on function word removal is available for [level 1 and level 2 all together](https://mydisk.cs.upc.edu/s/9X9Akx3M8MkFQqy).
 
